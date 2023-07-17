@@ -1,3 +1,4 @@
+import livros from "../models/Livro.js";
 import Livro from "../models/Livro.js";
 
 class LivroController {
@@ -12,6 +13,22 @@ class LivroController {
       });
   };
 
+  static listarLivroId = (req, res) => {
+    const id = req.params.id;
+  
+    livros.findById(id)
+      .then((livro) => {
+        if (!livro) {
+          res.status(404).send({ message: 'Livro não encontrado' });
+        } else {
+          res.status(200).json(livro);
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  };
+  
   static cadastrarLivro = (req, res) => {
     let livro = new Livro(req.body);
 
@@ -23,6 +40,50 @@ class LivroController {
         res.status(500).send({ message: `${err.message} - falha ao cadastrar livro.` });
       });
   };
+
+  static atualizarLivro = (req, res) => {
+    const id = req.params.id;
+    const livroData = req.body;
+  
+    livros.findByIdAndUpdate(id, { $set: livroData })
+      .then(() => {
+        res.status(200).send({ message: 'Livro Atualizado com sucesso' });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  };
+
+  static livroId = (req, res) => {
+    const id = req.params.id;
+    const livroData = req.body;
+  
+    livros.findById(id, { $set: livroData })
+      .then(() => {
+        res.status(200).json(this.livroId)
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  };
+
+  static deletarLivro = (req, res) => {
+    const id = req.params.id;
+
+    livros.findByIdAndDelete(id)
+      .then((livro) => {
+        if (!livro) {
+          res.status(404).send({ message: 'Livro não encontrado' });
+        } else {
+          res.status(200).send({ message: 'Livro excluído com sucesso' });
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  };
+  
 }
+
 
 export default LivroController;
