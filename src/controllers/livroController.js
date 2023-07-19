@@ -2,8 +2,11 @@ import livros from "../models/Livro.js";
 import Livro from "../models/Livro.js";
 
 class LivroController {
+
   static listarLivros = (req, res) => {
     Livro.find()
+      .populate('autor') // Popula a propriedade 'autor' com o objeto completo do autor
+      .exec()
       .then((livros) => {
         res.status(200).json(livros);
       })
@@ -17,6 +20,8 @@ class LivroController {
     const id = req.params.id;
   
     livros.findById(id)
+    .populate('autor', 'nome')
+    .exec()
       .then((livro) => {
         if (!livro) {
           res.status(404).send({ message: 'Livro não encontrado' });
