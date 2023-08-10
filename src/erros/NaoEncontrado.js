@@ -6,4 +6,4 @@ class NaoEncontrado extends ErroBase {
   }
 }
 
-export default NaoEncontrado;
+export default NaoEncontrado; 
